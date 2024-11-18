@@ -119,22 +119,22 @@ int main(int argc, char* argv[]) {
             default:
                 break;
             }
-        }
+        }else{
+            Statement statement;
+            switch (prepare_statement(input_buffer, &statement))
+            {
+            case (PREPARE_SUCCESS):
+                break;
+            case (PREPARE_UNRECOGNIZED_STATEMENT):
+                printf("Unrecognized keyword at start of '%s'.\n", input_buffer->buffer);
+                continue;
+            default:
+                break;
+            }
 
-        Statement statement;
-        switch (prepare_statement(input_buffer, &statement))
-        {
-        case (PREPARE_SUCCESS):
-            break;
-        case (PREPARE_UNRECOGNIZED_STATEMENT):
-            printf("Unrecognized keyword at start of '%s'.\n", input_buffer->buffer);
-            continue;
-        default:
-            break;
+            execute_statement(&statement);
+            printf("Executed.\n");
         }
-
-        execute_statement(&statement);
-        printf("Executed.\n");
     }
     
 }
