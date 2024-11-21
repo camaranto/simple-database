@@ -1,7 +1,7 @@
 describe 'database' do
     def run_script(commands)
         raw_output = nil
-        IO.popen("./bin/SimpleDB", "r+") do |pipe|
+        IO.popen("./bin/SimpleDB data.db", "r+") do |pipe|
             commands.each do |command|
                 pipe.puts command
             end
@@ -85,4 +85,27 @@ describe 'database' do
             "db > Bye!",
         ])
     end
+
+    it 'Kepp data after closing the program' do
+        result1 = run_script([
+            "insert 1 test_user test_user@gmail.com",
+            ".exit",
+        ])
+
+        expect(result1).to match_array([
+            "db > Executed successfully!",
+            "db > Bye!",
+        ])
+
+        result2 = run_script([
+            "select",
+            ".exit",
+        ])
+
+        expect(result2).to match_array([
+            "db > 1 - test_user - test_user@gmail.com",
+            "Executed succesfully!",
+            "db > Bye!",
+        ])
+    end 
 end
