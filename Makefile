@@ -18,3 +18,6 @@ clean:
 run:
 	./$(TARGET)
 rebuild: clean $(TARGET)
+
+test:
+	rspec tests/test.rb
