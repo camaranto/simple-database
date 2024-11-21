@@ -1,13 +1,16 @@
 describe 'database' do
-    def run_script(commands)
+    def run_script(commands, delete_db=true)
         raw_output = nil
-        IO.popen("./bin/SimpleDB data.db", "r+") do |pipe|
+        db_file = "data.db"
+        if  File.file?(db_file) and delete_db
+            File.delete(db_file)
+        end
+        IO.popen("./bin/SimpleDB #{db_file}", "r+") do |pipe|
             commands.each do |command|
                 pipe.puts command
             end
 
             pipe.close_write
-
             raw_output = pipe.gets(nil)
         end
         raw_output.split("\n")
@@ -86,7 +89,7 @@ describe 'database' do
         ])
     end
 
-    it 'Kepp data after closing the program' do
+    it 'Keep data after closing the program' do
         result1 = run_script([
             "insert 1 test_user test_user@gmail.com",
             ".exit",
@@ -100,11 +103,11 @@ describe 'database' do
         result2 = run_script([
             "select",
             ".exit",
-        ])
+        ],false)
 
         expect(result2).to match_array([
             "db > 1 - test_user - test_user@gmail.com",
-            "Executed succesfully!",
+            "Executed successfully!",
             "db > Bye!",
         ])
     end 
