@@ -1,5 +1,5 @@
 # Compiler and flags
-CC = gcc
+CC = clang
 CFLAGS = -Wall -Werror -g
 
 OUTPUT_DIR = bin
